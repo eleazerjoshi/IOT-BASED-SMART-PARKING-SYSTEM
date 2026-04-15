@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParkNow IoT Smart Car Parking</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F5F3EE;--card:#FFFFFF;--dark:#111210;
+  --green:#1A7A3C;--green-light:#E8F5ED;--green-mid:#2EA855;
+  --red:#C0392B;--red-light:#FDECEA;
+  --amber:#D97706;--amber-light:#FEF3C7;
+  --border:#E2DDD6;--muted:#7A7368;--text:#1A1916;
+  --display:'Syne',sans-serif;--mono:'DM Mono',monospace;--sans:'Manrope',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+nav{position:sticky;top:0;z-index:200;background:rgba(245,243,238,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 5vw;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-brand{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-0.5px}
+.nav-brand em{color:var(--green);font-style:normal}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.hero{min-height:92vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:4rem;padding:5rem 5vw 3rem;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 59px,var(--border) 60px),repeating-linear-gradient(90deg,transparent,transparent 59px,var(--border) 60px);opacity:.4;pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--green-light);color:var(--green);border:1px solid #B2DFC0;border-radius:100px;padding:6px 16px;font-size:12px;font-weight:600;letter-spacing:.5px;margin-bottom:1.5rem}
+.ir-blink{width:8px;height:8px;border-radius:50%;background:var(--green-mid);animation:blink .8s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 3px rgba(46,168,85,.3)}50%{opacity:.4;box-shadow:none}}
+.hero h1{font-family:var(--display);font-size:clamp(40px,5.5vw,72px);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:1.5rem}
+.hero h1 .line2{color:var(--green);display:block}
+.hero-desc{font-size:17px;color:var(--muted);line-height:1.7;max-width:460px;margin-bottom:2.5rem;font-weight:300}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-dark{background:var(--dark);color:#fff;padding:14px 32px;border-radius:100px;font-size:15px;font-weight:600;transition:all .2s;cursor:pointer;border:none;display:inline-block}
+.btn-dark:hover{background:#333;transform:translateY(-2px)}
+.ir-panel{background:var(--dark);border-radius:24px;padding:2rem;position:relative;overflow:hidden}
+.ir-panel::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(46,168,85,.15),transparent 70%);pointer-events:none}
+.ir-title{font-family:var(--mono);font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:8px}
+.ir-title::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green-mid);animation:blink .8s ease-in-out infinite}
+.ir-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.5rem}
+.ir-slot{border-radius:10px;padding:10px 6px;text-align:center;border:1px solid transparent;transition:all .25s;position:relative}
+.ir-slot.free{background:rgba(46,168,85,.12);border-color:rgba(46,168,85,.3)}
+.ir-slot.res{background:rgba(217,119,6,.18);border-color:rgba(217,119,6,.5)}
+.ir-slot .slot-id{font-family:var(--mono);font-size:10px;color:#aaa;margin-bottom:4px}
+.ir-beam{font-size:18px;display:block;margin-bottom:3px}
+.ir-status{font-size:9px;font-weight:700;letter-spacing:.8px}
+.ir-slot.free .ir-status{color:var(--green-mid)}
+.ir-slot.res .ir-status{color:#f59e0b}
+.ir-footer{display:flex;justify-content:space-between;align-items:center}
+.ir-counts{display:flex;gap:12px}
+.ir-count{font-family:var(--mono);font-size:11px;display:flex;align-items:center;gap:5px}
+.dot{width:7px;height:7px;border-radius:50%}
+.dot.g{background:var(--green-mid)}.dot.a{background:#f59e0b}
+.section{padding:6rem 5vw}
+.section-tag{display:inline-block;background:var(--green-light);color:var(--green);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:100px;border:1px solid #B2DFC0;margin-bottom:1.2rem}
+.section-h{font-family:var(--display);font-size:clamp(32px,4vw,52px);font-weight:800;letter-spacing:-1.5px;line-height:1.05;margin-bottom:1rem}
+.section-sub{font-size:16px;color:var(--muted);line-height:1.7;font-weight:300;max-width:520px}
+.ir-explain{background:var(--bg)}
+.ir-explain-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;margin-top:3rem}
+.ir-diagram{background:var(--dark);border-radius:20px;padding:2.5rem;position:relative;overflow:hidden}
+.ir-diagram::after{content:'';position:absolute;bottom:-60px;left:-60px;width:280px;height:280px;background:radial-gradient(circle,rgba(46,168,85,.1),transparent 70%)}
+.ir-diagram-title{font-family:var(--mono);font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:2rem}
+.ir-lane{display:flex;align-items:center;background:#1A1C18;border-radius:12px;padding:16px 20px;margin-bottom:12px;position:relative;overflow:hidden}
+.ir-lane-label{font-family:var(--mono);font-size:11px;color:#888;width:50px;flex-shrink:0}
+.ir-beam-line{flex:1;height:2px;background:repeating-linear-gradient(90deg,rgba(46,168,85,.8) 0,rgba(46,168,85,.8) 8px,transparent 8px,transparent 16px);position:relative;border-radius:1px;margin:0 8px}
+.ir-beam-line.blocked{background:repeating-linear-gradient(90deg,rgba(217,119,6,.8) 0,rgba(217,119,6,.8) 8px,transparent 8px,transparent 16px)}
+.ir-emitter{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;border:2px solid;font-weight:700}
+.ir-emitter.tx{background:rgba(46,168,85,.2);border-color:rgba(46,168,85,.5);color:var(--green-mid)}
+.ir-emitter.rx-ok{background:rgba(46,168,85,.2);border-color:rgba(46,168,85,.5);color:var(--green-mid)}
+.ir-emitter.rx-blocked{background:rgba(217,119,6,.2);border-color:rgba(217,119,6,.5);color:#f59e0b;font-size:12px}
+.ir-status-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;font-family:var(--mono);font-size:10px;margin-top:6px}
+.ir-status-chip.clear{background:rgba(46,168,85,.12);color:var(--green-mid)}
+.ir-status-chip.blocked{background:rgba(217,119,6,.12);color:#f59e0b}
+.ir-features{display:flex;flex-direction:column;gap:1.5rem}
+.ir-feat{display:flex;gap:1.25rem;align-items:flex-start}
+.ir-feat-icon{width:44px;height:44px;border-radius:10px;background:var(--green-light);border:1px solid #B2DFC0;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.ir-feat h4{font-size:15px;font-weight:700;margin-bottom:5px;letter-spacing:-.3px}
+.ir-feat p{font-size:13px;color:var(--muted);line-height:1.6}
+.booking-section{background:var(--card)}
+.booking-layout{display:grid;grid-template-columns:1fr 1.3fr;gap:4rem;align-items:start;margin-top:3rem}
+.booking-form-card{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:2rem}
+.form-group{margin-bottom:1.25rem}
+.form-label{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:8px}
+.form-input{width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:10px;padding:11px 16px;font-size:14px;font-family:var(--sans);color:var(--text);transition:border .2s;outline:none}
+.form-input:focus{border-color:var(--green)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A7368' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.slot-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:1rem}
+.pick-slot{padding:8px 4px;border-radius:8px;border:1.5px solid var(--border);text-align:center;cursor:pointer;transition:all .2s;background:var(--card)}
+.pick-slot .pid{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.pick-slot .picon{font-size:16px;display:block;margin:2px 0}
+.pick-slot .pst{font-size:9px;font-weight:600;letter-spacing:.5px}
+.pick-slot.pfree{border-color:#B2DFC0}
+.pick-slot.pfree .pst{color:var(--green)}
+.pick-slot.pfree:hover,.pick-slot.pfree.selected{background:var(--green-light);border-color:var(--green)}
+.pick-slot.pres{background:var(--amber-light);border-color:#F5D98A;cursor:not-allowed;opacity:.8}
+.pick-slot.pres .pst{color:var(--amber)}
+.slot-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:10px}
+.sl-item{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.sl-box{width:11px;height:11px;border-radius:3px;border:1.5px solid}
+.book-btn{width:100%;background:var(--green);color:#fff;padding:14px;border-radius:12px;font-size:15px;font-weight:700;border:none;cursor:pointer;margin-top:1.5rem;transition:all .2s;letter-spacing:.3px}
+.book-btn:hover{background:#15662F;transform:translateY(-1px)}
+.book-btn:disabled{background:#aaa;cursor:not-allowed;transform:none}
+.booking-summary{background:var(--dark);color:#fff;border-radius:20px;padding:2rem;position:sticky;top:80px}
+.bs-title{font-family:var(--display);font-size:22px;font-weight:800;margin-bottom:1.5rem}
+.bs-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px}
+.bs-label{color:#888}
+.bs-val{font-weight:600;font-family:var(--mono);font-size:13px}
+.bs-val.green{color:var(--green-mid)}
+.bs-total{font-family:var(--display);font-size:28px;font-weight:800;color:var(--green-mid);text-align:right;margin-top:1.5rem}
+.ir-live-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(46,168,85,.15);color:var(--green-mid);border:1px solid rgba(46,168,85,.25);border-radius:6px;padding:5px 12px;font-family:var(--mono);font-size:11px;margin-bottom:1.5rem}
+.ir-live-chip::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green-mid);animation:blink .8s infinite}
+.pay-btn{width:100%;background:var(--green);color:#fff;padding:15px;border-radius:12px;font-size:16px;font-weight:700;border:none;cursor:pointer;margin-top:1.5rem;transition:all .2s;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:10px}
+.pay-btn:hover{background:#15662F}
+.pay-btn:disabled{background:#aaa;cursor:not-allowed}
+.payment-section{background:var(--bg)}
+.pay-section-inner{max-width:520px;margin:3rem auto 0;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.5rem}
+.pay-locked{text-align:center;padding:2rem 0}
+.pay-locked-sub{font-size:13px;color:var(--muted);opacity:.7}
+.pay-ready{display:none}
+.pay-summary-box{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.5rem}
+.pay-sum-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px dashed var(--border)}
+.pay-sum-row:last-child{border-bottom:none;font-weight:700;font-size:15px}
+.pay-sum-row span:last-child{font-family:var(--mono)}
+.razorpay-badge{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:1rem;font-size:11px;color:var(--muted);font-family:var(--mono)}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark);color:#fff;padding:1rem 1.5rem;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transform:translateY(100px);opacity:0;transition:all .4s;max-width:320px;border-left:4px solid var(--green-mid)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{border-left-color:#e74c3c}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px)}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--card);border-radius:24px;padding:2.5rem;max-width:440px;width:90%;transform:scale(.95);transition:transform .3s;text-align:center}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal-icon{font-size:52px;margin-bottom:1rem}
+.modal-title{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:.5rem}
+.modal-sub{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:2rem}
+.modal-detail{background:var(--bg);border-radius:12px;padding:1.25rem;text-align:left;margin-bottom:2rem}
+.modal-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0}
+.modal-row span:last-child{font-family:var(--mono);font-weight:600}
+
+/* ── OTP Display Box ── */
+.otp-box{
+  background:var(--dark);
+  border-radius:14px;
+  padding:1.25rem 1.5rem;
+  margin:1.25rem 0;
+  text-align:center;
+}
+.otp-label{
+  font-family:var(--mono);
+  font-size:10px;
+  color:#555;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:10px;
+}
+.otp-digits{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+.otp-digit{
+  width:40px;
+  height:52px;
+  background:#1A1C18;
+  border:1.5px solid rgba(46,168,85,.35);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--mono);
+  font-size:24px;
+  font-weight:700;
+  color:var(--green-mid);
+  letter-spacing:0;
+  animation:otp-pop .4s ease both;
+}
+.otp-digit:nth-child(1){animation-delay:.05s}
+.otp-digit:nth-child(2){animation-delay:.1s}
+.otp-digit:nth-child(3){animation-delay:.15s}
+.otp-digit:nth-child(4){animation-delay:.2s}
+.otp-digit:nth-child(5){animation-delay:.25s}
+.otp-digit:nth-child(6){animation-delay:.3s}
+@keyframes otp-pop{
+  0%{transform:translateY(12px) scale(.85);opacity:0}
+  100%{transform:none;opacity:1}
+}
+.otp-hint{font-size:11px;color:#555;font-family:var(--mono);margin-top:10px;letter-spacing:.5px}
+
+.modal-close{background:var(--green);color:#fff;width:100%;padding:13px;border-radius:12px;font-size:15px;font-weight:700;border:none;cursor:pointer}
+footer{background:var(--dark);color:#fff;padding:3rem 5vw;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem}
+.footer-brand{font-family:var(--display);font-size:20px;font-weight:800}
+.footer-brand em{color:var(--green-mid);font-style:normal}
+.footer-copy{font-family:var(--mono);font-size:11px;color:#555}
+@media(max-width:900px){
+  .hero,.booking-layout,.ir-explain-grid{grid-template-columns:1fr}
+  .ir-panel{margin-top:2rem}
+  nav .nav-links{display:none}
+  .hero h1{font-size:40px}
+  footer{flex-direction:column;text-align:center}
+}
+.fade{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade.visible{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Park<em>Now</em></div>
+  <ul class="nav-links">
+    <li><a href="#booking">Book a Slot</a></li>
+    <li><a href="#sensors">IR System</a></li>
+    <li><a href="#payment">Payment</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div>
+    <div class="hero-badge"><div class="ir-blink"></div>IR Sensor </div>
+    <h1>SMART PARKING<span class="line2">POWERED BY IoT</span></h1>
+    <p class="hero-desc">Real-time slot detection using IR sensors, instant online booking, and seamless Razorpay payments — all in one system.</p>
+    <div class="hero-btns">
+      <button class="btn-dark" onclick="scrollTo({top:document.getElementById('booking').offsetTop,behavior:'smooth'})">Book a Parking Slot</button>
+    </div>
+  </div>
+  <div class="ir-panel">
+    <div class="ir-title">IR Sensor Grid</div>
+    <div class="ir-grid" id="hero-ir-grid"></div>
+    <div class="ir-footer">
+      <div class="ir-counts">
+        <div class="ir-count"><div class="dot g"></div><span id="fc" style="color:#aaa;font-size:11px">6 free</span></div>
+        <div class="ir-count"><div class="dot a"></div><span id="rc" style="color:#aaa;font-size:11px">0 booked</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="ir-explain section" id="sensors">
+  <div class="section-tag">Technology</div>
+  <div class="section-h">IR Sensor System</div>
+  <div class="ir-explain-grid">
+    <div class="ir-diagram">
+      <div class="ir-diagram-title">IR Beam Simulation</div>
+      <div id="ir-lanes"></div>
+      <div style="margin-top:1.5rem;font-family:var(--mono);font-size:10px;color:#555;letter-spacing:1px">FC-51 INFRARED OBSTACLE SENSOR · 3.3V–5V · ESP32 GPIO</div>
+    </div>
+    <div class="ir-features">
+      <div class="ir-feat fade">
+        <div class="ir-feat-icon">⚡</div>
+        <div><h4>Instant Detection</h4><p>The FC-51 IR sensor pair emits a 38kHz infrared beam. When a vehicle interrupts the beam, the receiver signals HIGH to the ESP32 GPIO pin in under 50ms.</p></div>
+      </div>
+      <div class="ir-feat fade">
+        <div class="ir-feat-icon">🔗</div>
+        <div><h4>ESP32 Integration</h4><p>Each sensor is wired to a dedicated GPIO pin on the ESP32. The firmware polls all pins at 20Hz and publishes state changes via MQTT to the backend.</p></div>
+      </div>
+      <div class="ir-feat fade">
+        <div class="ir-feat-icon">🌐</div>
+        <div><h4>Live Web Sync</h4><p>MQTT messages received by the Node.js server push WebSocket events to all connected web clients instantly.</p></div>
+      </div>
+      <div class="ir-feat fade">
+        <div class="ir-feat-icon">🔋</div>
+        <div><h4>Low Power Design</h4><p>Each IR sensor consumes only ~20mA at 5V. The ESP32 uses deep-sleep between polling cycles for solar-powered deployments.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="booking-section section" id="booking">
+  <div class="section-tag">Reserve</div>
+  <div class="section-h">Book Your Slot</div>
+  <p class="section-sub">Select a free slot detected by our IR sensors and confirm your booking.</p>
+  <div class="booking-layout">
+    <div>
+      <div class="ir-live-chip">IR Live Feed</div>
+      <div class="booking-form-card">
+        <div class="form-group">
+          <label class="form-label">Vehicle Number</label>
+          <input class="form-input" id="veh-num" type="text" placeholder="e.g. WB10AB1234" maxlength="12">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Vehicle Type</label>
+          <select class="form-input form-select" id="veh-type" onchange="updateBookingSummary()">
+            <option value="car">Car / SUV — ₹40/hr</option>
+            <option value="passenger">Passenger — ₹60/hr</option>
+            <option value="bike">Motorcycle — ₹20/hr</option>
+            <option value="ev">EV (includes charging) — ₹50/hr</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Duration (hours)</label>
+          <input class="form-input" id="duration" type="number" value="2" min="1" max="12" oninput="updateBookingSummary()">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Select a Slot (Green = Free, Orange = Booked)</label>
+          <div class="slot-picker" id="slot-picker"></div>
+          <div class="slot-legend">
+            <div class="sl-item"><div class="sl-box" style="background:#E8F5ED;border-color:#1A7A3C"></div>Free</div>
+            <div class="sl-item"><div class="sl-box" style="background:#FEF3C7;border-color:#D97706"></div>Booked</div>
+          </div>
+        </div>
+        <button class="book-btn" id="book-btn" onclick="handleBooking()">Confirm Booking &amp; Proceed to Pay</button>
+      </div>
+    </div>
+    <div class="booking-summary">
+      <div class="bs-title">Booking Summary</div>
+      <div class="bs-row"><span class="bs-label">Selected Slot</span><span class="bs-val green" id="bs-slot">—</span></div>
+      <div class="bs-row"><span class="bs-label">Vehicle No.</span><span class="bs-val" id="bs-veh">—</span></div>
+      <div class="bs-row"><span class="bs-label">Duration</span><span class="bs-val" id="bs-dur">2 hrs</span></div>
+      <div class="bs-row"><span class="bs-label">Rate</span><span class="bs-val" id="bs-rate">₹40/hr</span></div>
+      <div class="bs-row"><span class="bs-label">Parking Fee</span><span class="bs-val" id="bs-fee">₹80</span></div>
+      <div class="bs-row"><span class="bs-label">Service Fee</span><span class="bs-val">₹10</span></div>
+      <div class="bs-total" id="bs-total">₹90</div>
+      <div style="font-size:12px;color:#555;text-align:right;margin-top:4px">Total to Pay</div>
+      <div style="margin-top:1.5rem;padding:1rem;background:rgba(46,168,85,.1);border-radius:10px;border:1px solid rgba(46,168,85,.2)">
+        <div style="font-family:var(--mono);font-size:11px;color:#555;margin-bottom:8px;letter-spacing:1px">IR SENSOR STATUS</div>
+        <div id="sensor-status-list" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="payment-section section" id="payment">
+  <div class="section-tag">Checkout</div>
+  <div class="section-h">Secure Payment</div>
+  <p class="section-sub">Powered by Razorpay — UPI, card, wallet, and net banking all supported.</p>
+  <div class="pay-section-inner fade">
+    <div class="pay-locked" id="pay-locked">
+      <div style="font-size:48px;margin-bottom:1rem">🔒</div>
+      <div style="font-weight:600;font-size:17px;margin-bottom:8px">Complete Your Booking First</div>
+      <div class="pay-locked-sub">Select a free slot and fill your vehicle details, then click "Confirm Booking" to unlock payment.</div>
+      <button class="book-btn" style="margin-top:1.5rem;max-width:280px;margin-left:auto;margin-right:auto;display:block"
+        onclick="scrollTo({top:document.getElementById('booking').offsetTop,behavior:'smooth'})">Go to Booking</button>
+    </div>
+    <div class="pay-ready" id="pay-ready">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem">
+        <div style="width:36px;height:36px;background:var(--green-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px">✅</div>
+        <div>
+          <div style="font-weight:700;font-size:15px">Booking Confirmed</div>
+          <div style="font-size:12px;color:var(--muted)" id="pay-ref-label">Ref: #PN-2026-0000</div>
+        </div>
+      </div>
+      <div class="pay-summary-box">
+        <div class="pay-sum-row"><span>Slot</span><span id="ps-slot">—</span></div>
+        <div class="pay-sum-row"><span>Vehicle</span><span id="ps-veh">—</span></div>
+        <div class="pay-sum-row"><span>Duration</span><span id="ps-dur">—</span></div>
+        <div class="pay-sum-row"><span>Rate</span><span id="ps-rate">—</span></div>
+        <div class="pay-sum-row"><span>Parking Fee</span><span id="ps-fee">—</span></div>
+        <div class="pay-sum-row"><span>Service Fee</span><span>₹10</span></div>
+        <div class="pay-sum-row"><span>Total</span><span id="ps-total" style="color:var(--green)">—</span></div>
+      </div>
+      <button class="pay-btn" id="pay-btn" onclick="handleRazorpayPayment()">
+        <span>🔒</span> Pay <span id="pay-amount-btn">₹90</span> via Razorpay
+      </button>
+      <div class="razorpay-badge">
+        <span>Secured by</span>
+        <span style="font-weight:700;color:#072654">Razorpay</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Park<em>Now</em></div>
+  <div class="footer-copy">© 2026 ParkNow IoT · ESP32 + MQTT + IR Sensors</div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- ── SUCCESS MODAL with OTP ── -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-icon">🎉</div>
+    <div class="modal-title">Payment Successful!</div>
+    <div class="modal-sub">Your parking slot is confirmed. Use the OTP below at the entry barrier.</div>
+    <div class="modal-detail">
+      <div class="modal-row"><span>Booking ID</span><span id="m-id">#PN-2026-0001</span></div>
+      <div class="modal-row"><span>Slot</span><span id="m-slot">—</span></div>
+      <div class="modal-row"><span>Vehicle</span><span id="m-veh">—</span></div>
+      <div class="modal-row"><span>Duration</span><span id="m-dur">—</span></div>
+      <div class="modal-row"><span>Amount Paid</span><span id="m-amount" style="color:var(--green)">—</span></div>
+    </div>
+
+    <!-- OTP Display -->
+    <div class="otp-box">
+      <div class="otp-label">Entry OTP</div>
+      <div class="otp-digits" id="otp-digits">
+        <div class="otp-digit">—</div>
+      </div>
+      <div class="otp-hint">Show this at the barrier to enter</div>
+    </div>
+
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">Done</button>
+  </div>
+</div>
+
+<script>
+const RAZORPAY_KEY = "rzp_test_ScsEYOiBEtecBT";
+const SERVER = "http://localhost:5000";
+
+const slots = [
+  { id: 'A1', state: 'free' },
+  { id: 'A2', state: 'free' },
+  { id: 'A3', state: 'free' },
+  { id: 'A4', state: 'free' },
+  { id: 'A5', state: 'free' },
+  { id: 'A6', state: 'free' },
+];
+
+let selectedSlot     = null;
+let bookingConfirmed = false;
+let currentBookingRef = null;
+let currentTotal     = 90;
+const rates = { car: 40, passenger: 60, bike: 20, ev: 50 };
+
+function countStates() {
+  return {
+    free: slots.filter(s => s.state === 'free').length,
+    res:  slots.filter(s => s.state === 'res').length,
+  };
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Render the 6-digit OTP as individual digit boxes ──
+function renderOTP(otp) {
+  const container = document.getElementById('otp-digits');
+  if (!container) return;
+  container.innerHTML = String(otp).split('').map(d =>
+    `<div class="otp-digit">${d}</div>`
+  ).join('');
+}
+
+// ── HERO IR GRID ──
+function renderHeroGrid() {
+  const g = document.getElementById('hero-ir-grid');
+  if (!g) return;
+  g.innerHTML = slots.map(s => {
+    const icon  = s.state === 'free' ? '◯' : '◉';
+    const label = s.state === 'free' ? 'FREE' : 'BOOKED';
+    return `<div class="ir-slot ${s.state}" title="Slot ${s.id}">
+      <div class="slot-id">${s.id}</div>
+      <span class="ir-beam">${icon}</span>
+      <div class="ir-status">${label}</div>
+    </div>`;
+  }).join('');
+  const c = countStates();
+  document.getElementById('fc').textContent = c.free + ' free';
+  document.getElementById('rc').textContent = c.res  + ' booked';
+}
+
+// ── SLOT PICKER ──
+function renderPicker() {
+  const p = document.getElementById('slot-picker');
+  if (!p) return;
+  p.innerHTML = slots.map(s => {
+    const cls      = s.state === 'free' ? 'pfree' : 'pres';
+    const icon     = s.state === 'free' ? '🟢' : '🟡';
+    const lbl      = s.state === 'free' ? 'FREE' : 'BOOKED';
+    const selected = (selectedSlot && selectedSlot.id === s.id) ? ' selected' : '';
+    return `<div class="pick-slot ${cls}${selected}" onclick="selectSlot('${s.id}')">
+      <div class="pid">${s.id}</div>
+      <span class="picon">${icon}</span>
+      <div class="pst">${lbl}</div>
+    </div>`;
+  }).join('');
+}
+
+function selectSlot(id) {
+  const s = slots.find(x => x.id === id);
+  if (!s || s.state !== 'free') { showToast('⚠️ This slot is already booked.'); return; }
+  selectedSlot     = s;
+  bookingConfirmed = false;
+  renderPicker();
+  updateBookingSummary();
+  showToast('✅ Slot ' + id + ' selected!');
+}
+
+function updateBookingSummary() {
+  const type  = document.getElementById('veh-type')?.value || 'car';
+  const dur   = parseInt(document.getElementById('duration')?.value || 2);
+  const rate  = rates[type] || 40;
+  const fee   = rate * dur;
+  const total = fee + 10;
+  currentTotal = total;
+
+  document.getElementById('bs-slot').textContent  = selectedSlot ? selectedSlot.id : '—';
+  document.getElementById('bs-veh').textContent   = document.getElementById('veh-num')?.value || '—';
+  document.getElementById('bs-dur').textContent   = dur + ' hr' + (dur > 1 ? 's' : '');
+  document.getElementById('bs-rate').textContent  = '₹' + rate + '/hr';
+  document.getElementById('bs-fee').textContent   = '₹' + fee;
+  document.getElementById('bs-total').textContent = '₹' + total;
+
+  const ssl = document.getElementById('sensor-status-list');
+  if (ssl) {
+    ssl.innerHTML = slots.map(s => `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-family:var(--mono);font-size:10px;color:#888">Slot ${s.id}</span>
+        <span style="font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;
+          background:${s.state==='free'?'rgba(46,168,85,.15)':'rgba(217,119,6,.15)'};
+          color:${s.state==='free'?'#2EA855':'#D97706'}">
+          ${s.state === 'free' ? 'FREE' : 'BOOKED'}
+        </span>
+      </div>`).join('');
+  }
+}
+
+document.getElementById('veh-num')?.addEventListener('input', () => {
+  const v = document.getElementById('veh-num').value.toUpperCase();
+  document.getElementById('veh-num').value = v;
+  document.getElementById('bs-veh').textContent = v || '—';
+});
+
+function handleBooking() {
+  const veh = document.getElementById('veh-num')?.value.trim();
+  if (!veh)          { showToast('⚠️ Please enter your vehicle number.'); return; }
+  if (!selectedSlot) { showToast('⚠️ Please select a free slot.'); return; }
+
+  const type  = document.getElementById('veh-type')?.value || 'car';
+  const dur   = parseInt(document.getElementById('duration')?.value || 2);
+  const rate  = rates[type] || 40;
+  const fee   = rate * dur;
+  const total = fee + 10;
+  currentTotal = total;
+
+  const ref = '2026-' + String(Math.floor(Math.random() * 9000) + 1000);
+  currentBookingRef = ref;
+  bookingConfirmed  = true;
+
+  document.getElementById('ps-slot').textContent        = selectedSlot.id;
+  document.getElementById('ps-veh').textContent         = veh;
+  document.getElementById('ps-dur').textContent         = dur + ' hr' + (dur > 1 ? 's' : '');
+  document.getElementById('ps-rate').textContent        = '₹' + rate + '/hr';
+  document.getElementById('ps-fee').textContent         = '₹' + fee;
+  document.getElementById('ps-total').textContent       = '₹' + total;
+  document.getElementById('pay-amount-btn').textContent = '₹' + total;
+  document.getElementById('pay-ref-label').textContent  = 'Ref: #PN-' + ref;
+
+  document.getElementById('pay-locked').style.display = 'none';
+  document.getElementById('pay-ready').style.display  = 'block';
+
+  showToast('✅ Booking confirmed! Scroll down to pay.');
+  setTimeout(() => scrollTo({ top: document.getElementById('payment').offsetTop, behavior: 'smooth' }), 600);
+}
+
+// ── RAZORPAY PAYMENT ──
+async function handleRazorpayPayment() {
+  if (!bookingConfirmed || !selectedSlot) {
+    showToast('⚠️ Please complete your booking first.'); return;
+  }
+  const btn = document.getElementById('pay-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>⏳</span> Creating order...';
+
+  try {
+    const res = await fetch(`${SERVER}/create-order`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ amount: currentTotal }),
+    });
+    if (!res.ok) throw new Error('Server error: ' + res.status);
+    const order = await res.json();
+
+    btn.disabled = false;
+    btn.innerHTML = '<span>🔒</span> Pay ₹' + currentTotal + ' via Razorpay';
+
+    const veh          = document.getElementById('veh-num').value.trim();
+    const dur          = parseInt(document.getElementById('duration')?.value || 2);
+    const bookedSlotId = selectedSlot.id;
+
+    const options = {
+      key:         RAZORPAY_KEY,
+      amount:      order.amount,
+      currency:    order.currency,
+      name:        'ParkNow IoT Parking',
+      description: 'Slot ' + bookedSlotId + ' · ' + veh,
+      order_id:    order.id,
+      handler: async function(response) {
+        try {
+          const verifyRes = await fetch(`${SERVER}/verify-payment`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+              razorpay_order_id:   response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature:  response.razorpay_signature,
+            }),
+          });
+          const result = await verifyRes.json();
+
+          if (result.success) {
+            // ✅ Mark slot as booked
+            const s = slots.find(x => x.id === bookedSlotId);
+            if (s) s.state = 'res';
+            renderHeroGrid();
+            renderPicker();
+            renderIRLanes();
+            updateBookingSummary();
+
+            // ✅ Populate modal fields
+            document.getElementById('m-id').textContent     = '#PN-' + currentBookingRef;
+            document.getElementById('m-slot').textContent   = bookedSlotId;
+            document.getElementById('m-veh').textContent    = veh;
+            document.getElementById('m-dur').textContent    = dur + ' hr' + (dur > 1 ? 's' : '');
+            document.getElementById('m-amount').textContent = '₹' + currentTotal;
+
+            // ✅ Render OTP digits — received from server
+            renderOTP(result.otp);
+
+            document.getElementById('modal').classList.add('open');
+
+            selectedSlot     = null;
+            bookingConfirmed = false;
+            document.getElementById('pay-ready').style.display  = 'none';
+            document.getElementById('pay-locked').style.display = 'block';
+          } else {
+            showToast('❌ Payment verification failed! Contact support.', 'error');
+          }
+        } catch (e) {
+          showToast('❌ Verification error: ' + e.message, 'error');
+        }
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', e => {
+      showToast('❌ Payment failed: ' + e.error.description, 'error');
+      btn.disabled = false;
+    });
+    rzp.open();
+
+  } catch (err) {
+    btn.disabled = false;
+    btn.innerHTML = '<span>🔒</span> Pay ₹' + currentTotal + ' via Razorpay';
+    showToast('❌ ' + err.message, 'error');
+    console.error('Payment error:', err);
+  }
+}
+
+// ── IR LANE DIAGRAM ──
+function renderIRLanes() {
+  const c = document.getElementById('ir-lanes');
+  if (!c) return;
+  c.innerHTML = slots.map(s => {
+    const blocked = s.state === 'res';
+    return `<div>
+      <div class="ir-lane">
+        <div class="ir-lane-label">${s.id}</div>
+        <div class="ir-emitter tx">TX</div>
+        <div class="ir-beam-line ${blocked ? 'blocked' : ''}" style="margin:0 8px"></div>
+        <div class="ir-emitter ${blocked ? 'rx-blocked' : 'rx-ok'}">${blocked ? '✕' : 'RX'}</div>
+      </div>
+      <div class="${blocked ? 'ir-status-chip blocked' : 'ir-status-chip clear'}" style="margin-left:56px;margin-top:4px">
+        ${blocked ? '● VEHICLE DETECTED — BOOKED' : '● BEAM CLEAR — SLOT FREE'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+const obs = new IntersectionObserver(
+  entries => entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('visible'); }),
+  { threshold: 0.1 }
+);
+document.querySelectorAll('.fade').forEach(el => obs.observe(el));
+
+renderHeroGrid();
+renderPicker();
+renderIRLanes();
+updateBookingSummary();
+</script>
+</body>
+</html>
