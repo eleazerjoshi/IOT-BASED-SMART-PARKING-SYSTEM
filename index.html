@@ -168,9 +168,6 @@ nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(13,15,12,.9);b
 .b-badge{background:var(--green-dim);border:1px solid var(--green-border);color:var(--green);font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px}
 .b-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--text2)}
 .b-row span:last-child{font-family:var(--mono);color:var(--text);font-size:11px}
-.b-otp{margin-top:.9rem;background:var(--surface);border:1px solid var(--green-border);border-radius:var(--rs);padding:.6rem .9rem;display:flex;justify-content:space-between;align-items:center}
-.b-otp-label{font-family:var(--mono);font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
-.b-otp-val{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--green);letter-spacing:4px}
 .no-bookings{text-align:center;padding:3rem 0;color:var(--muted);font-size:14px}
 
 /* ── OTP MODAL ── */
@@ -232,9 +229,9 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
 <section class="hero">
   <div>
     <h1>SMART<br><span>PARKING</span><br>SYSTEM</h1>
-    <p class="hero-sub"> Smart Parking is an IoT system that uses sensors to detect vehicle presence,
-  processes data through cloud platforms, and automates parking management 
-  reducing congestion, saving time, and optimizing space utilization.</p>
+    <p class="hero-sub">  Smart Parking is an IoT ecosystem where sensors detect vehicles,
+    cloud databases track availability, and digital payments enable
+    contactless entry automating the entire parking experience.</p>
     <button class="btn-primary" onclick="window.scrollTo({top:document.getElementById('booking').offsetTop,behavior:'smooth'})">
       Book a Slot
     </button>
@@ -417,7 +414,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
 
 <footer>
   <div class="footer-brand">Park<em>Now</em></div>
-  <div class="footer-copy">© 2026 ParkNow IoT · ESP32 + MongoDB Atlas + Razorpay</div>
+  <div class="footer-copy">© 2026 ParkNow IoT</div>
 </footer>
 
 <div class="toast" id="toast"></div>
@@ -862,10 +859,6 @@ async function loadBookings() {
         <div class="b-row"><span>Duration</span><span>${b.duration_hrs} hr${b.duration_hrs > 1 ? 's' : ''}</span></div>
         <div class="b-row"><span>Amount</span><span>₹${b.total_amount}</span></div>
         <div class="b-row"><span>Booked at</span><span>${paidAt}</span></div>
-        <div class="b-otp">
-          <div class="b-otp-label">MongoDB OTP</div>
-          <div class="b-otp-val">${b.otp || '——'}</div>
-        </div>
       </div>`;
     }).join('');
   } catch (e) {
