@@ -263,18 +263,18 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
     <div style="display:flex;flex-direction:column;gap:1rem">
       <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem">
         <div style="font-size:18px;margin-bottom:.5rem">🗄️</div>
-        <div style="font-weight:700;font-size:14px;margin-bottom:.4rem">MongoDB Atlas Storage</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.6">Every slot state, booking, OTP, and session is stored in MongoDB Atlas. The 6-digit OTP is saved to the <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">bookings</code> collection and verified at entry/exit.</div>
+        <div style="font-weight:700;font-size:14px;margin-bottom:.4rem">Database Storage</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">Every slot state, booking, OTP, and session is stored in the Database. The 6-digit OTP is saved to the <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">bookings</code> collection and verified at entry/exit.</div>
       </div>
       <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem">
         <div style="font-size:18px;margin-bottom:.5rem">🔐</div>
         <div style="font-weight:700;font-size:14px;margin-bottom:.4rem">OTP Verification Flow</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.6">After payment, a 6-digit OTP is generated and stored in MongoDB. The barrier calls <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">POST /verify-otp</code> to look it up and grant entry.</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">After payment, a 6-digit OTP is generated and stored in the Database. The barrier calls <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">POST /verify-otp</code> to look it up and grant entry.</div>
       </div>
       <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem">
         <div style="font-size:18px;margin-bottom:.5rem">🚗</div>
         <div style="font-weight:700;font-size:14px;margin-bottom:.4rem">Exit & Session History</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.6">Exit validates the OTP, calculates actual duration and fee, frees the slot, and writes an immutable record to the <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">sessions</code> collection.</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">Exit validates the OTP, calculates actual duration and fee, frees the slot, and writes an immutable record to the <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">sessions</code> collection in the Database.</div>
       </div>
     </div>
   </div>
@@ -334,7 +334,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
       <div class="sum-total" id="ss-total">₹90</div>
       <div class="sum-total-label">Total to Pay</div>
       <div class="sensor-mini">
-        <div class="sensor-mini-title">Slot Status</div>
+        <div class="sensor-mini-title">Database Slot Status</div>
         <div id="sensor-mini"></div>
       </div>
     </div>
@@ -408,7 +408,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
   <div class="section-label">Live</div>
   <div class="section-title">Active Bookings</div>
   <div class="bookings-grid" id="bookings-grid">
-    <div class="no-bookings">Loading from Database</div>
+    <div class="no-bookings">Loading from MongoDB… 🗄️</div> 
   </div>
 </section>
 
@@ -424,7 +424,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
   <div class="modal">
     <div class="modal-icon">🎉</div>
     <div class="modal-title">Payment Successful!</div>
-    <div class="modal-sub">Your slot is confirmed. OTP saved to Database</div>
+    <div class="modal-sub">Your slot is confirmed. OTP saved to the Database.</div>
     <div class="modal-detail">
       <div class="modal-row"><span>Booking ID</span><span id="m-id">—</span></div>
       <div class="modal-row"><span>Slot</span><span id="m-slot">—</span></div>
@@ -438,7 +438,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
       <div class="otp-hint">Show this at the entry/exit barrier</div>
     </div>
     <div class="modal-note">
-      <strong>📋 How to use:</strong> Take note of your OTP. At the entry barrier, enter it to confirm your slot. At exit, enter the same OTP — the system will validate it from MongoDB and free your slot.
+      <strong>📋 How to use:</strong> Take note of your OTP. At the entry barrier, enter it to confirm your slot. At exit, enter the same OTP — the system will validate it from the Database and free your slot.
     </div>
     <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">Done ✓</button>
   </div>
@@ -599,7 +599,7 @@ async function handleBooking() {
 
   const btn = document.getElementById('book-btn');
   btn.disabled = true;
-  document.getElementById('book-btn-text').textContent = 'Saving to MongoDB…';
+  document.getElementById('book-btn-text').textContent = 'Saving to Database…';
 
   try {
     // POST to server → saved in MongoDB bookings collection as "pending"
@@ -643,7 +643,7 @@ async function handleBooking() {
     document.getElementById('pay-locked').style.display = 'none';
     document.getElementById('pay-ready').style.display  = 'block';
 
-    showToast('✅ Booking saved to MongoDB! Scroll to pay.');
+    showToast('✅ Booking saved to Database! Scroll to pay.');
     setTimeout(() => scrollTo({ top: document.getElementById('payment').offsetTop, behavior: 'smooth' }), 500);
 
   } catch (err) {
@@ -690,8 +690,8 @@ async function handleRazorpayPayment() {
       order_id:    order.id,
       handler: async function(response) {
         try {
-          // Server verifies HMAC, generates OTP, saves to MongoDB,
-          // and marks slot as "booked" in MongoDB
+          // Server verifies HMAC, generates OTP, saves to Database,
+          // and marks slot as "booked" in Database
           const verifyRes = await fetch(`${SERVER}/verify-payment`, {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -705,7 +705,7 @@ async function handleRazorpayPayment() {
           const result = await verifyRes.json();
 
           if (result.success) {
-            // Update local slot state; server already updated MongoDB
+            // Update local slot state; server already updated Database
             const s = slots.find(x => x.id === slotId);
             if (s) s.state = 'booked';
             renderAll();
@@ -754,7 +754,7 @@ async function handleRazorpayPayment() {
 }
 
 // ── EXIT KIOSK ────────────────────────────────────────────────────────────────
-// Looks up OTP in MongoDB → validates → frees slot → returns fee
+// Looks up OTP in Database → validates → frees slot → returns fee
 async function handleExit() {
   const otp    = document.getElementById('exit-otp').value.trim();
   const btn    = document.getElementById('exit-btn');
@@ -762,7 +762,7 @@ async function handleExit() {
   if (otp.length !== 6) return;
 
   btn.disabled  = true;
-  btn.innerHTML = '⏳ Checking MongoDB…';
+  btn.innerHTML = '⏳ Checking Database…';
 
   try {
     const res  = await fetch(`${SERVER}/exit`, {
@@ -827,7 +827,7 @@ function renderIRLanes() {
         <div class="ir-emitter ${blocked ? 'rx-blocked' : 'rx-ok'}">${blocked ? '✕' : 'RX'}</div>
       </div>
       <div class="ir-status-chip ${blocked ? 'blocked' : 'clear'}" style="margin-left:40px">
-        ${blocked ? '● VEHICLE — BOOKED IN MONGODB' : '● CLEAR — FREE IN MONGODB'}
+        ${blocked ? '● VEHICLE — BOOKED IN DATABASE' : '● CLEAR — FREE IN DATABASE'}
       </div>
     </div>`;
   }).join('');
@@ -842,7 +842,7 @@ async function loadBookings() {
     if (!g) return;
 
     if (!data.success || !data.bookings?.length) {
-      g.innerHTML = '<div class="no-bookings">No active bookings in MongoDB 🗄️</div>';
+      g.innerHTML = '<div class="no-bookings">No active bookings in Database 🗄️</div>';
       return;
     }
 
@@ -882,7 +882,7 @@ document.querySelectorAll('.fade').forEach(el => {
 });
 
 // ── INIT ────────────────────────────────────────────────────────────────────────
-loadSlots();                            // sync slots from MongoDB on page load
+loadSlots();                            // sync slots from Database on page load
 loadBookings();                         // load live bookings panel
 setInterval(loadSlots,   15000);        // re-sync slots every 15s
 setInterval(loadBookings, 10000);       // refresh bookings every 10s
