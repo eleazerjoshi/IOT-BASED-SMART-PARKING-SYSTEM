@@ -146,16 +146,19 @@ nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(13,15,12,.9);b
 .rzp-badge{text-align:center;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:.75rem;display:flex;align-items:center;justify-content:center;gap:5px}
 .rzp-badge strong{color:#528FF0}
 
-/* ── EXIT KIOSK ── */
-.exit-section{background:var(--bg)}
-.exit-card{max-width:480px;margin:2.5rem auto 0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:2rem}
-.exit-result{display:none;margin-top:1.25rem;border-radius:var(--rs);padding:1.25rem;border:1px solid}
-.exit-result.success{background:var(--green-dim);border-color:var(--green-border)}
-.exit-result.error{background:var(--red-dim);border-color:var(--red-border)}
-.exit-result-title{font-weight:700;font-size:15px;margin-bottom:.75rem}
-.exit-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--border2)}
-.exit-row:last-child{border-bottom:none;font-weight:700;font-size:15px;padding-top:8px}
-.exit-row span:last-child{font-family:var(--mono)}
+/* ── EXIT SLOTS ── */
+.exit-slots-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.exit-slot-card{background:var(--surface);border:1px solid var(--amber-border);border-radius:var(--r);padding:1.25rem;position:relative;overflow:hidden;transition:border-color .2s}
+.exit-slot-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--amber),transparent)}
+.exit-slot-card:hover{border-color:var(--amber)}
+.exit-slot-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
+.exit-slot-id{font-family:var(--display);font-size:22px;font-weight:800;letter-spacing:-1px}
+.exit-slot-badge{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber);font-family:var(--mono);font-size:9px;font-weight:700;padding:2px 8px;border-radius:4px}
+.exit-slot-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--text2)}
+.exit-slot-row span:last-child{font-family:var(--mono);color:var(--text);font-size:11px}
+.exit-btn-card{width:100%;margin-top:1rem;background:var(--amber);color:#fff;padding:10px;border-radius:var(--rs);font-size:13px;font-weight:700;border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+.exit-btn-card:hover{background:#D97706;transform:translateY(-1px)}
+.exit-btn-card:disabled{background:var(--muted);cursor:not-allowed;transform:none}
 
 /* ── LIVE BOOKINGS ── */
 .live-section{background:var(--surface)}
@@ -173,7 +176,7 @@ nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(13,15,12,.9);b
 /* ── OTP MODAL ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(6px)}
 .modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;max-width:420px;width:90%;transform:scale(.96);transition:transform .3s;text-align:center}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2rem;max-width:420px;width:90%;transform:scale(.96);transition:transform .3s;text-align:center;max-height:90vh;overflow-y:auto}
 .modal-overlay.open .modal{transform:scale(1)}
 .modal-icon{font-size:48px;margin-bottom:.75rem}
 .modal-title{font-family:var(--display);font-size:26px;font-weight:800;letter-spacing:-1px;margin-bottom:.4rem}
@@ -194,8 +197,15 @@ nav{position:sticky;top:0;z-index:200;height:60px;background:rgba(13,15,12,.9);b
 .otp-hint{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:8px}
 .modal-note{font-size:11px;color:var(--text2);background:var(--card);border-radius:var(--rs);padding:.75rem 1rem;margin-bottom:1rem;text-align:left;border:1px solid var(--border)}
 .modal-note strong{color:var(--text)}
-.modal-close{background:var(--green);color:#fff;width:100%;padding:12px;border-radius:var(--rs);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background .2s}
+.modal-close{background:var(--green);color:#fff;width:100%;padding:12px;border-radius:var(--rs);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:background .2s;margin-top:.5rem}
 .modal-close:hover{background:#25913F}
+
+/* ── EXIT MODAL EXTRAS ── */
+.overstay-warning{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:var(--rs);padding:.75rem 1rem;margin-bottom:1rem;font-size:12px;color:var(--amber);text-align:left}
+.exit-confirm-btn{width:100%;background:var(--green);color:#fff;padding:13px;border-radius:var(--rs);font-size:14px;font-weight:700;border:none;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:.5rem}
+.exit-confirm-btn:hover:not(:disabled){background:#25913F}
+.exit-confirm-btn:disabled{background:var(--muted);cursor:not-allowed}
+.exit-otp-box{background:var(--card);border:1px solid var(--green-border);border-radius:var(--rs);padding:1.1rem 1.25rem;margin:1rem 0;text-align:center}
 
 /* ── TOAST ── */
 .toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--surface);color:var(--text);border:1px solid var(--border);padding:.85rem 1.25rem;border-radius:var(--rs);font-size:13px;font-weight:500;z-index:9999;transform:translateY(80px);opacity:0;transition:all .35s;max-width:300px;border-left:3px solid var(--green)}
@@ -213,7 +223,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
   .hero,.booking-wrap,.ir-lanes-wrap{grid-template-columns:1fr}
   .hero h1{font-size:38px}
   footer{flex-direction:column;text-align:center}
-  .bookings-grid{grid-template-columns:1fr}
+  .bookings-grid,.exit-slots-grid{grid-template-columns:1fr}
 }
 .fade{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
 .fade.visible{opacity:1;transform:none}
@@ -224,12 +234,12 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
 <nav>
   <div class="nav-brand">Park<em>Now</em></div>
 </nav>
-    
+
 <!-- ── HERO ── -->
 <section class="hero">
   <div>
     <h1>SMART<br><span>PARKING</span><br>SYSTEM</h1>
-    <p class="hero-sub">  Smart Parking is an IoT ecosystem where sensors detect vehicles,
+    <p class="hero-sub">Smart Parking is an IoT ecosystem where sensors detect vehicles,
     cloud databases track availability, and digital payments enable
     contactless entry automating the entire parking experience.</p>
     <button class="btn-primary" onclick="window.scrollTo({top:document.getElementById('booking').offsetTop,behavior:'smooth'})">
@@ -274,7 +284,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
       <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem">
         <div style="font-size:18px;margin-bottom:.5rem">🚗</div>
         <div style="font-weight:700;font-size:14px;margin-bottom:.4rem">Exit & Session History</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.6">Exit validates the OTP, calculates actual duration and fee, frees the slot, and writes an immutable record to the <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">sessions</code> collection in the Database.</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.6">Click Exit on your booked slot — the system calculates actual duration, charges any overstay fee via Razorpay, frees the slot, and writes an immutable record to <code style="font-family:var(--mono);background:var(--surface);padding:1px 4px;border-radius:3px">sessions</code>.</div>
       </div>
     </div>
   </div>
@@ -381,23 +391,16 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
 
 <hr class="divider">
 
-<!-- ── EXIT KIOSK ── -->
-<section class="exit-section section" id="exit">
+<!-- ── EXIT PARKING ── -->
+<section class="section" id="exit" style="background:var(--bg)">
   <div class="section-label">Exit</div>
-  <div class="section-title">Exit log</div>
-  <div class="exit-card fade">
-    <div class="form-group">
-      <label class="form-label">Your 6-Digit OTP</label>
-      <input class="form-input" id="exit-otp" type="text" placeholder="e.g. 847291" maxlength="6" style="font-family:var(--mono);font-size:22px;letter-spacing:6px;text-align:center"
-        oninput="this.value=this.value.replace(/\D/g,'');document.getElementById('exit-btn').disabled=this.value.length!==6">
-    </div>
-    <button class="book-btn" id="exit-btn" disabled onclick="handleExit()">
-      Validate OTP & Exit
-    </button>
-    <div class="exit-result" id="exit-result">
-      <div class="exit-result-title" id="exit-result-title">—</div>
-      <div id="exit-result-rows"></div>
-    </div>
+  <div class="section-title">Exit Parking</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:2rem;max-width:520px;line-height:1.7">
+    Click <strong style="color:var(--text)">Exit</strong> on your slot. The system calculates actual time parked,
+    charges any overstay fee via Razorpay, frees the slot, and issues a new exit OTP as confirmation.
+  </p>
+  <div class="exit-slots-grid fade" id="exit-slots-grid">
+    <div class="no-bookings">Loading booked slots… 🗄️</div>
   </div>
 </section>
 
@@ -408,7 +411,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
   <div class="section-label">Live</div>
   <div class="section-title">Active Bookings</div>
   <div class="bookings-grid" id="bookings-grid">
-    <div class="no-bookings">Loading from MongoDB… 🗄️</div> 
+    <div class="no-bookings">Loading from MongoDB… 🗄️</div>
   </div>
 </section>
 
@@ -419,7 +422,7 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
 
 <div class="toast" id="toast"></div>
 
-<!-- OTP SUCCESS MODAL -->
+<!-- ── BOOKING SUCCESS MODAL ── -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
     <div class="modal-icon">🎉</div>
@@ -438,19 +441,60 @@ footer{background:var(--surface);border-top:1px solid var(--border);padding:2rem
       <div class="otp-hint">Show this at the entry/exit barrier</div>
     </div>
     <div class="modal-note">
-      <strong>📋 How to use:</strong> Take note of your OTP. At the entry barrier, enter it to confirm your slot. At exit, enter the same OTP — the system will validate it from the Database and free your slot.
+      <strong>📋 How to use:</strong> Take note of your OTP. At the entry barrier, enter it to confirm your slot. When ready to leave, click the Exit button on your slot — the system handles everything automatically.
     </div>
     <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">Done ✓</button>
   </div>
 </div>
 
-<script>    
+<!-- ── EXIT MODAL ── -->
+<div class="modal-overlay" id="exit-modal">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-icon" id="exit-modal-icon">🚗</div>
+    <div class="modal-title" id="exit-modal-title">Exit Summary</div>
+    <div class="modal-sub" id="exit-modal-sub">Calculating your session…</div>
+
+    <!-- Session detail rows -->
+    <div class="modal-detail" id="exit-modal-detail"></div>
+
+    <!-- State A: overstay → pay extra -->
+    <div id="exit-state-pay" style="display:none">
+      <div class="overstay-warning">
+        ⚠️ <strong>Overstay detected.</strong> Please pay the extra charge to exit.
+      </div>
+      <button class="pay-btn" id="exit-extra-pay-btn" onclick="handleExtraPayment()">
+        🔒 Pay Extra <span id="exit-extra-amount">₹0</span> via Razorpay
+      </button>
+      <div class="rzp-badge" style="margin-top:.6rem">Secured by <strong>Razorpay</strong></div>
+    </div>
+
+    <!-- State B: no overstay → free exit -->
+    <div id="exit-state-free" style="display:none">
+      <button class="exit-confirm-btn" id="exit-free-btn" onclick="handleFreeExit()">
+        ✅ Confirm Exit (No Extra Charge)
+      </button>
+    </div>
+
+    <!-- State C: done → show new OTP -->
+    <div id="exit-state-done" style="display:none">
+      <div class="exit-otp-box">
+        <div class="otp-label">Exit Confirmation OTP</div>
+        <div class="otp-digits" id="exit-otp-digits"></div>
+        <div class="otp-hint">Slot freed. Session complete! 🎉</div>
+      </div>
+    </div>
+
+    <button class="modal-close" onclick="closeExitModal()">Close</button>
+  </div>
+</div>
+
+<script>
 // ── CONFIG ────────────────────────────────────────────────────────────────────
 const RAZORPAY_KEY = "rzp_test_ScsEYOiBEtecBT";
 const SERVER       = "https://iot-based-smart-parking-system-wa38.onrender.com";
 const RATES        = { car: 40, passenger: 60, bike: 20, ev: 50 };
 
-// ── STATE ──────────────────────────────────────────────────────────────────────
+// ── STATE ─────────────────────────────────────────────────────────────────────
 let slots = [
   { id:'A1', state:'free' }, { id:'A2', state:'free' },
   { id:'A3', state:'free' }, { id:'A4', state:'free' },
@@ -461,7 +505,24 @@ let bookingConfirmed  = false;
 let currentBookingRef = null;
 let currentTotal      = 90;
 
-// ── HELPERS ────────────────────────────────────────────────────────────────────
+// Exit state
+let exitBookingRef = null;
+let exitExtraFee   = 0;
+let exitSlotId     = null;
+
+// ── SAFE FETCH (handles HTML error pages gracefully) ──────────────────────────
+async function safeFetch(url, options = {}) {
+  const res         = await fetch(url, options);
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    const text = await res.text();
+    throw new Error(`Server error (${res.status}). Is the server awake? Try again in a few seconds.`);
+  }
+  const data = await res.json();
+  return { res, data };
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────────
 function showToast(msg, type = '') {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -469,8 +530,8 @@ function showToast(msg, type = '') {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-function renderOTP(otp) {
-  document.getElementById('otp-digits').innerHTML =
+function renderOTP(otp, containerId) {
+  document.getElementById(containerId).innerHTML =
     String(otp).split('').map(d => `<div class="otp-digit">${d}</div>`).join('');
 }
 
@@ -481,16 +542,14 @@ function countStates() {
   };
 }
 
-// ── LOAD SLOTS FROM MONGODB ───────────────────────────────────────────────────
-// Called on page load and after exit to sync real state from DB
+// ── LOAD SLOTS FROM DB ────────────────────────────────────────────────────────
 async function loadSlots() {
   try {
-    const res  = await fetch(`${SERVER}/slots`);
-    const data = await res.json();
+    const { data } = await safeFetch(`${SERVER}/slots`);
     if (data.success) {
       data.slots.forEach(d => {
         const s = slots.find(x => x.id === d.slot_id);
-        if (s) s.state = d.state; // "free" or "booked" from MongoDB
+        if (s) s.state = d.state;
       });
     }
   } catch (e) {
@@ -505,9 +564,10 @@ function renderAll() {
   renderPicker();
   renderIRLanes();
   updateSummary();
+  renderExitSlots();
 }
 
-// ── HERO IR GRID ───────────────────────────────────────────────────────────────
+// ── HERO IR GRID ──────────────────────────────────────────────────────────────
 function renderHeroGrid() {
   const g = document.getElementById('hero-ir-grid');
   if (!g) return;
@@ -522,7 +582,7 @@ function renderHeroGrid() {
   document.getElementById('rc').textContent = c.booked;
 }
 
-// ── SLOT PICKER ────────────────────────────────────────────────────────────────
+// ── SLOT PICKER ───────────────────────────────────────────────────────────────
 function renderPicker() {
   const p = document.getElementById('slot-picker');
   if (!p) return;
@@ -549,7 +609,7 @@ function selectSlot(id) {
   showToast('✅ Slot ' + id + ' selected!');
 }
 
-// ── BOOKING SUMMARY ────────────────────────────────────────────────────────────
+// ── BOOKING SUMMARY ───────────────────────────────────────────────────────────
 function updateSummary() {
   const type  = document.getElementById('veh-type')?.value || 'car';
   const dur   = parseInt(document.getElementById('duration')?.value || 2);
@@ -558,17 +618,13 @@ function updateSummary() {
   const total = fee + 10;
   currentTotal = total;
 
-  document.getElementById('ss-slot').textContent = selectedSlotId || '—';
-  document.getElementById('ss-veh').textContent  = document.getElementById('veh-num')?.value || '—';
-  document.getElementById('ss-dur').textContent  = dur + ' hr' + (dur > 1 ? 's' : '');
-  document.getElementById('ss-rate').textContent = '₹' + rate + '/hr';
-  document.getElementById('ss-fee').textContent  = '₹' + fee;
+  document.getElementById('ss-slot').textContent  = selectedSlotId || '—';
+  document.getElementById('ss-veh').textContent   = document.getElementById('veh-num')?.value || '—';
+  document.getElementById('ss-dur').textContent   = dur + ' hr' + (dur > 1 ? 's' : '');
+  document.getElementById('ss-rate').textContent  = '₹' + rate + '/hr';
+  document.getElementById('ss-fee').textContent   = '₹' + fee;
   document.getElementById('ss-total').textContent = '₹' + total;
 
-  const btn = document.getElementById('book-btn-text');
-  if (btn) btn.textContent = 'Confirm Booking & Pay';
-
-  // Sensor mini list
   const mini = document.getElementById('sensor-mini');
   if (mini) {
     mini.innerHTML = slots.map(s => `
@@ -584,10 +640,10 @@ document.getElementById('veh-num')?.addEventListener('input', e => {
   document.getElementById('ss-veh').textContent = e.target.value || '—';
 });
 
-// ── STEP 1: SAVE BOOKING TO MONGODB ───────────────────────────────────────────
+// ── STEP 1: SAVE BOOKING ──────────────────────────────────────────────────────
 async function handleBooking() {
   const veh = document.getElementById('veh-num')?.value.trim();
-  if (!veh)          { showToast('⚠️ Enter your vehicle number.'); return; }
+  if (!veh)            { showToast('⚠️ Enter your vehicle number.'); return; }
   if (!selectedSlotId) { showToast('⚠️ Select a free slot.'); return; }
 
   const type        = document.getElementById('veh-type')?.value || 'car';
@@ -602,35 +658,24 @@ async function handleBooking() {
   document.getElementById('book-btn-text').textContent = 'Saving to Database…';
 
   try {
-    // POST to server → saved in MongoDB bookings collection as "pending"
-    const res  = await fetch(`${SERVER}/create-booking`, {
+    const { res, data } = await safeFetch(`${SERVER}/create-booking`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({
-        slot_id:      selectedSlotId,
-        vehicle_no:   veh,
-        vehicle_type: type,
-        duration_hrs: dur,
-        rate_per_hr:  rate,
-        parking_fee,
-        total_amount: total,
-      }),
+      body:    JSON.stringify({ slot_id: selectedSlotId, vehicle_no: veh, vehicle_type: type, duration_hrs: dur, rate_per_hr: rate, parking_fee, total_amount: total }),
     });
-    const data = await res.json();
 
     btn.disabled = false;
     document.getElementById('book-btn-text').textContent = 'Confirm Booking & Pay';
 
     if (!data.success) {
       showToast('❌ ' + data.message, 'error');
-      if (res.status === 409) await loadSlots(); // refresh if slot was taken
+      if (res.status === 409) await loadSlots();
       return;
     }
 
     currentBookingRef = data.booking_ref;
     bookingConfirmed  = true;
 
-    // Populate payment panel
     document.getElementById('ps-slot').textContent    = selectedSlotId;
     document.getElementById('ps-veh').textContent     = veh;
     document.getElementById('ps-dur').textContent     = dur + ' hr' + (dur > 1 ? 's' : '');
@@ -643,7 +688,7 @@ async function handleBooking() {
     document.getElementById('pay-locked').style.display = 'none';
     document.getElementById('pay-ready').style.display  = 'block';
 
-    showToast('✅ Booking saved to Database! Scroll to pay.');
+    showToast('✅ Booking saved! Scroll to pay.');
     setTimeout(() => scrollTo({ top: document.getElementById('payment').offsetTop, behavior: 'smooth' }), 500);
 
   } catch (err) {
@@ -653,7 +698,7 @@ async function handleBooking() {
   }
 }
 
-// ── STEP 2: RAZORPAY PAYMENT ───────────────────────────────────────────────────
+// ── STEP 2: RAZORPAY PAYMENT ──────────────────────────────────────────────────
 async function handleRazorpayPayment() {
   if (!bookingConfirmed || !selectedSlotId || !currentBookingRef) {
     showToast('⚠️ Confirm your booking first.'); return;
@@ -664,22 +709,19 @@ async function handleRazorpayPayment() {
   btn.innerHTML = '⏳ Creating order…';
 
   try {
-    // Create Razorpay order; server links it to booking in MongoDB
-    const res = await fetch(`${SERVER}/create-order`, {
+    const { data: order } = await safeFetch(`${SERVER}/create-order`, {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ amount: currentTotal, booking_ref: currentBookingRef }),
     });
-    if (!res.ok) throw new Error('Server error: ' + res.status);
-    const order = await res.json();
 
     btn.disabled  = false;
     btn.innerHTML = '🔒 Pay ₹' + currentTotal + ' via Razorpay';
 
-    const veh        = document.getElementById('veh-num').value.trim();
-    const dur        = parseInt(document.getElementById('duration')?.value || 2);
-    const slotId     = selectedSlotId;
-    const ref        = currentBookingRef;
+    const veh    = document.getElementById('veh-num').value.trim();
+    const dur    = parseInt(document.getElementById('duration')?.value || 2);
+    const slotId = selectedSlotId;
+    const ref    = currentBookingRef;
 
     const options = {
       key:         RAZORPAY_KEY,
@@ -690,9 +732,7 @@ async function handleRazorpayPayment() {
       order_id:    order.id,
       handler: async function(response) {
         try {
-          // Server verifies HMAC, generates OTP, saves to Database,
-          // and marks slot as "booked" in Database
-          const verifyRes = await fetch(`${SERVER}/verify-payment`, {
+          const { data: result } = await safeFetch(`${SERVER}/verify-payment`, {
             method:  'POST',
             headers: { 'Content-Type': 'application/json' },
             body:    JSON.stringify({
@@ -702,33 +742,27 @@ async function handleRazorpayPayment() {
               booking_ref:         ref,
             }),
           });
-          const result = await verifyRes.json();
 
           if (result.success) {
-            // Update local slot state; server already updated Database
             const s = slots.find(x => x.id === slotId);
             if (s) s.state = 'booked';
             renderAll();
 
-            // Show success modal with OTP
             document.getElementById('m-id').textContent     = '#PN-' + ref;
             document.getElementById('m-slot').textContent   = slotId;
             document.getElementById('m-veh').textContent    = veh;
             document.getElementById('m-dur').textContent    = dur + ' hr' + (dur > 1 ? 's' : '');
             document.getElementById('m-amount').textContent = '₹' + currentTotal;
-            renderOTP(result.otp);
+            renderOTP(result.otp, 'otp-digits');
             document.getElementById('modal').classList.add('open');
 
-            // Reset booking state
             selectedSlotId    = null;
             bookingConfirmed  = false;
             currentBookingRef = null;
             document.getElementById('pay-ready').style.display  = 'none';
             document.getElementById('pay-locked').style.display = 'block';
 
-            // Refresh live bookings
             loadBookings();
-
           } else {
             showToast('❌ Payment verification failed!', 'error');
           }
@@ -753,67 +787,209 @@ async function handleRazorpayPayment() {
   }
 }
 
-// ── EXIT KIOSK ────────────────────────────────────────────────────────────────
-// Looks up OTP in Database → validates → frees slot → returns fee
-async function handleExit() {
-  const otp    = document.getElementById('exit-otp').value.trim();
-  const btn    = document.getElementById('exit-btn');
-  const result = document.getElementById('exit-result');
-  if (otp.length !== 6) return;
+// ── EXIT: RENDER BOOKED SLOT CARDS ────────────────────────────────────────────
+function renderExitSlots() {
+  const g = document.getElementById('exit-slots-grid');
+  if (!g) return;
+  const booked = slots.filter(s => s.state !== 'free');
+  if (!booked.length) {
+    g.innerHTML = '<div class="no-bookings">No occupied slots right now 🟢 All slots are free.</div>';
+    return;
+  }
+  g.innerHTML = booked.map(s => `
+    <div class="exit-slot-card">
+      <div class="exit-slot-header">
+        <div class="exit-slot-id">${s.id}</div>
+        <div class="exit-slot-badge">OCCUPIED</div>
+      </div>
+      <div class="exit-slot-row"><span>Status</span><span>🟡 Booked</span></div>
+      <div class="exit-slot-row"><span>IR Sensor</span><span>BLOCKED</span></div>
+      <button class="exit-btn-card" id="exit-card-btn-${s.id}" onclick="initiateExit('${s.id}')">
+        🚗 Exit Slot ${s.id}
+      </button>
+    </div>`).join('');
+}
 
-  btn.disabled  = true;
-  btn.innerHTML = '⏳ Checking Database…';
+// ── EXIT STEP 1: FETCH SESSION INFO BY SLOT ───────────────────────────────────
+async function initiateExit(slotId) {
+  exitSlotId = slotId;
+
+  // Disable the button while loading
+  const cardBtn = document.getElementById('exit-card-btn-' + slotId);
+  if (cardBtn) { cardBtn.disabled = true; cardBtn.textContent = '⏳ Loading…'; }
 
   try {
-    const res  = await fetch(`${SERVER}/exit`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ otp }),
-    });
-    const data = await res.json();
+    // Single GET — server looks up the active booking by slot_id directly
+    const { data } = await safeFetch(`${SERVER}/exit-info/${slotId}`);
 
-    btn.disabled  = false;
-    btn.innerHTML = '🚗 Validate OTP & Exit';
+    if (cardBtn) { cardBtn.disabled = false; cardBtn.textContent = '🚗 Exit Slot ' + slotId; }
 
-    if (data.success) {
-      const extra = data.extra_charge > 0
-        ? `<div class="exit-row"><span>Extra Charge</span><span style="color:var(--amber)">₹${data.extra_charge}</span></div>`
-        : '';
-
-      document.getElementById('exit-result-title').textContent = '✅ Exit Confirmed — Slot Freed';
-      document.getElementById('exit-result-rows').innerHTML = `
-        <div class="exit-row"><span>Booking</span><span>#PN-${data.booking_ref}</span></div>
-        <div class="exit-row"><span>Slot Freed</span><span>${data.slot_id}</span></div>
-        <div class="exit-row"><span>Vehicle</span><span>${data.vehicle_no}</span></div>
-        <div class="exit-row"><span>Duration</span><span>${data.duration_mins} min</span></div>
-        <div class="exit-row"><span>Pre-paid</span><span>₹${data.total_paid}</span></div>
-        ${extra}
-        <div class="exit-row"><span>Total Fee</span><span style="color:var(--green)">₹${data.fee}</span></div>
-      `;
-      result.className = 'exit-result success';
-      result.style.display = 'block';
-      document.getElementById('exit-otp').value = '';
-      document.getElementById('exit-btn').disabled = true;
-
-      // Refresh slot grid after exit
-      await loadSlots();
-      loadBookings();
-      showToast('✅ Exit confirmed. Slot ' + data.slot_id + ' is now free.');
-
-    } else {
-      document.getElementById('exit-result-title').textContent = '❌ ' + data.message;
-      document.getElementById('exit-result-rows').innerHTML = '';
-      result.className = 'exit-result error';
-      result.style.display = 'block';
+    if (!data.success) {
+      showToast('❌ ' + data.message, 'error');
+      return;
     }
+
+    exitBookingRef = data.booking_ref;
+    exitExtraFee   = data.extra_fee || 0;
+
+    const entryTime = new Date(data.entry_time).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' });
+
+    document.getElementById('exit-modal-sub').textContent = `Slot ${slotId} · ${data.vehicle_no}`;
+    document.getElementById('exit-modal-detail').innerHTML = `
+      <div class="modal-row"><span>Booking</span><span>#PN-${data.booking_ref}</span></div>
+      <div class="modal-row"><span>Vehicle</span><span>${data.vehicle_no}</span></div>
+      <div class="modal-row"><span>Entry Time</span><span>${entryTime}</span></div>
+      <div class="modal-row"><span>Booked Duration</span><span>${data.booked_duration_hrs} hrs</span></div>
+      <div class="modal-row"><span>Actual Duration</span><span>${data.actual_duration_hrs}h ${data.actual_duration_mins}m</span></div>
+      <div class="modal-row"><span>Pre-paid</span><span>₹${data.paid_amount}</span></div>
+      ${exitExtraFee > 0
+        ? `<div class="modal-row"><span style="color:var(--amber)">Overstay Charge</span><span style="color:var(--amber)">₹${exitExtraFee}</span></div>`
+        : ''}
+      <div class="modal-row"><span><strong>Total Due</strong></span><span style="color:var(--green)"><strong>₹${data.total_due}</strong></span></div>
+    `;
+
+    // Reset all states
+    document.getElementById('exit-state-pay').style.display  = 'none';
+    document.getElementById('exit-state-free').style.display = 'none';
+    document.getElementById('exit-state-done').style.display = 'none';
+
+    // Show the right action
+    document.getElementById('exit-extra-amount').textContent = '₹' + exitExtraFee;
+    if (exitExtraFee > 0) {
+      document.getElementById('exit-state-pay').style.display = 'block';
+    } else {
+      document.getElementById('exit-state-free').style.display = 'block';
+    }
+
+    document.getElementById('exit-modal').classList.add('open');
+
   } catch (err) {
-    btn.disabled  = false;
-    btn.innerHTML = '🚗 Validate OTP & Exit';
+    if (cardBtn) { cardBtn.disabled = false; cardBtn.textContent = '🚗 Exit Slot ' + slotId; }
     showToast('❌ ' + err.message, 'error');
   }
 }
 
-// ── IR LANE DIAGRAM ────────────────────────────────────────────────────────────
+// ── EXIT STEP 2A: OVERSTAY PAYMENT ───────────────────────────────────────────
+async function handleExtraPayment() {
+  const btn = document.getElementById('exit-extra-pay-btn');
+  btn.disabled  = true;
+  btn.innerHTML = '⏳ Creating order…';
+
+  try {
+    const { data: order } = await safeFetch(`${SERVER}/create-extra-order`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ amount: exitExtraFee, booking_ref: exitBookingRef }),
+    });
+
+    btn.disabled  = false;
+    btn.innerHTML = '🔒 Pay Extra ₹' + exitExtraFee + ' via Razorpay';
+
+    const options = {
+      key:         RAZORPAY_KEY,
+      amount:      order.amount,
+      currency:    order.currency,
+      name:        'ParkNow — Overstay Charge',
+      description: 'Extra time · Slot ' + exitSlotId,
+      order_id:    order.id,
+      handler: async function(response) {
+        try {
+          const { data: result } = await safeFetch(`${SERVER}/verify-extra-payment`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+              razorpay_order_id:   response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature:  response.razorpay_signature,
+              booking_ref:         exitBookingRef,
+            }),
+          });
+          if (result.success) {
+            await finalizeExit(result.new_otp);
+          } else {
+            showToast('❌ Extra payment verification failed!', 'error');
+          }
+        } catch (e) {
+          showToast('❌ ' + e.message, 'error');
+        }
+      },
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', e => {
+      showToast('❌ Payment failed: ' + e.error.description, 'error');
+      btn.disabled  = false;
+      btn.innerHTML = '🔒 Pay Extra ₹' + exitExtraFee + ' via Razorpay';
+    });
+    rzp.open();
+
+  } catch (err) {
+    btn.disabled  = false;
+    btn.innerHTML = '🔒 Pay Extra ₹' + exitExtraFee + ' via Razorpay';
+    showToast('❌ ' + err.message, 'error');
+  }
+}
+
+// ── EXIT STEP 2B: FREE EXIT ───────────────────────────────────────────────────
+async function handleFreeExit() {
+  const btn = document.getElementById('exit-free-btn');
+  btn.disabled  = true;
+  btn.innerHTML = '⏳ Processing exit…';
+  await finalizeExit(null);
+  btn.disabled  = false;
+  btn.innerHTML = '✅ Confirm Exit (No Extra Charge)';
+}
+
+// ── EXIT STEP 3: PROCESS EXIT → FREE SLOT → SHOW NEW OTP ─────────────────────
+async function finalizeExit(newOtp) {
+  try {
+    const { data } = await safeFetch(`${SERVER}/process-exit`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ booking_ref: exitBookingRef, new_otp: newOtp }),
+    });
+
+    if (data.success) {
+      // Free slot locally
+      const s = slots.find(x => x.id === exitSlotId);
+      if (s) s.state = 'free';
+      renderAll();
+      loadBookings();
+
+      // Show done state with confirmation OTP
+      document.getElementById('exit-state-pay').style.display  = 'none';
+      document.getElementById('exit-state-free').style.display = 'none';
+      document.getElementById('exit-state-done').style.display = 'block';
+
+      // Display the new OTP (or a generated one if not returned)
+      const confirmOtp = newOtp || String(Math.floor(100000 + Math.random() * 900000));
+      renderOTP(confirmOtp, 'exit-otp-digits');
+
+      document.getElementById('exit-modal-icon').textContent  = '✅';
+      document.getElementById('exit-modal-title').textContent = 'Exit Complete!';
+
+      showToast('✅ Slot ' + exitSlotId + ' is now free!');
+
+      exitBookingRef = null;
+      exitExtraFee   = 0;
+      exitSlotId     = null;
+
+    } else {
+      showToast('❌ ' + data.message, 'error');
+    }
+  } catch (err) {
+    showToast('❌ ' + err.message, 'error');
+  }
+}
+
+function closeExitModal() {
+  document.getElementById('exit-modal').classList.remove('open');
+  document.getElementById('exit-modal-icon').textContent  = '🚗';
+  document.getElementById('exit-modal-title').textContent = 'Exit Summary';
+  loadSlots();
+}
+
+// ── IR LANE DIAGRAM ───────────────────────────────────────────────────────────
 function renderIRLanes() {
   const c = document.getElementById('ir-lanes');
   if (!c) return;
@@ -833,12 +1009,11 @@ function renderIRLanes() {
   }).join('');
 }
 
-// ── LIVE BOOKINGS FROM MONGODB ─────────────────────────────────────────────────
+// ── LIVE BOOKINGS ─────────────────────────────────────────────────────────────
 async function loadBookings() {
   try {
-    const res  = await fetch(`${SERVER}/bookings`);
-    const data = await res.json();
-    const g    = document.getElementById('bookings-grid');
+    const { data } = await safeFetch(`${SERVER}/bookings`);
+    const g = document.getElementById('bookings-grid');
     if (!g) return;
 
     if (!data.success || !data.bookings?.length) {
@@ -847,7 +1022,9 @@ async function loadBookings() {
     }
 
     g.innerHTML = data.bookings.map(b => {
-      const paidAt = b.paid_at ? new Date(b.paid_at).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : '—';
+      const paidAt = b.paid_at
+        ? new Date(b.paid_at).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })
+        : '—';
       return `<div class="b-card">
         <div class="b-card-header">
           <div class="b-ref">#PN-${b.booking_ref}</div>
@@ -866,26 +1043,18 @@ async function loadBookings() {
   }
 }
 
+// ── INTERSECTION OBSERVER ─────────────────────────────────────────────────────
 const observer = new IntersectionObserver(
-  entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  },
+  entries => entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }),
   { threshold: 0.1 }
 );
+document.querySelectorAll('.fade').forEach(el => observer.observe(el));
 
-document.querySelectorAll('.fade').forEach(el => {
-  observer.observe(el);
-});
-
-// ── INIT ────────────────────────────────────────────────────────────────────────
-loadSlots();                            // sync slots from Database on page load
-loadBookings();                         // load live bookings panel
-setInterval(loadSlots,   15000);        // re-sync slots every 15s
-setInterval(loadBookings, 10000);       // refresh bookings every 10s
+// ── INIT ──────────────────────────────────────────────────────────────────────
+loadSlots();
+loadBookings();
+setInterval(loadSlots,    15000);
+setInterval(loadBookings, 10000);
 </script>
 </body>
 </html>
